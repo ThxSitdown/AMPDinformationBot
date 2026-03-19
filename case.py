@@ -3,7 +3,7 @@ from discord.ext import commands
 import re
 import logging
 
-CASE_CHANNEL_ID = 1405939142667403395  
+CASE_CHANNEL_ID = 1405512160582303786
 
 class CaseCog(commands.Cog):
     def __init__(self, bot: commands.Bot):

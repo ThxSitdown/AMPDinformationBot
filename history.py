@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 
 # ===== CONFIG =====
-HISTORY_CHANNEL_ID = 1406878389024850082
+HISTORY_CHANNEL_ID = 1405020047021183102
 
 class History(commands.Cog):
     def __init__(self, bot: commands.Bot):

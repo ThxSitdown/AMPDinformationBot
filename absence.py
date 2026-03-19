@@ -4,8 +4,8 @@ from discord import ui, Interaction, SelectOption
 import logging
 import datetime
 
-LEAVE_PANEL_CHANNEL_ID = 1405946599921811476 # ห้องเก็บปุ่ม "แจ้งลา"
-LEAVE_CHANNEL_ID = 1406538844467236935  # ห้องส่งข้อมูลการลา
+LEAVE_PANEL_CHANNEL_ID = 1405090095840886868 # ห้องเก็บปุ่ม "แจ้งลา"
+LEAVE_CHANNEL_ID = 1406501084565864488  # ห้องส่งข้อมูลการลา
 
 # ---------------- Modal ----------------
 class LeaveForm(ui.Modal, title="แบบฟอร์มแจ้งลา"):

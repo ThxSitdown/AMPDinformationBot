@@ -13,7 +13,7 @@ import time
 # ================== CONFIG ==================
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 GOOGLE_CREDENTIALS = os.getenv("GOOGLE_CREDENTIALS")
-DUTY_CHANNEL_ID = 1408080182325153975
+DUTY_CHANNEL_ID = 1405512115615170621
 
 # Fallback local file
 if not DISCORD_BOT_TOKEN:
