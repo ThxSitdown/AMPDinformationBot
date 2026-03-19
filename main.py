@@ -83,7 +83,7 @@ if GOOGLE_CREDENTIALS:
     try:
         creds = ServiceAccountCredentials.from_json_keyfile_dict(json.loads(GOOGLE_CREDENTIALS), SCOPE)
         client = gspread.authorize(creds)
-        workbook = client.open("DataWPD")
+        workbook = client.open("DataAMPD")
         bot.workbook = workbook
 
         # worksheets
