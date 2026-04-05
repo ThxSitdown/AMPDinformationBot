@@ -2,85 +2,143 @@ import discord
 from discord.ext import commands
 
 # ====== CONFIG ======
-ROLE_ID = 1405031312531918878
-ROLE_TRAINEE = 1405031457063305236
+POLICE_ROLE = 1405031312531918878
+TRAINEE_ROLE = 1405031457063305236
+DOCTOR_ROLE = 1479831488332828703 
+
 LOG_CHANNEL_ID = 1405031839877300356
 WELCOME_CHANNEL_ID = 1405034341133844501
 # =====================
 
-class IntroModal(discord.ui.Modal, title="กรอกข้อมูลแนะนำตัว"):
-    policeid = discord.ui.TextInput(label="รหัสประจำตัว", placeholder="ถามจากผู้คุมสอบ")
-    name = discord.ui.TextInput(label="ชื่อ IC", placeholder="เช่น Sitdown Jubmuah")
-    phone = discord.ui.TextInput(label="เบอร์ IC", placeholder="เช่น 01234", required=False)
-    Steam = discord.ui.TextInput(label="SteamHex", required=False)
-    invigilator = discord.ui.TextInput(label="ผู้คุมสอบ", placeholder="ชื่อของผู้ที่สอบคุณเข้ามา")
+
+# ====== MODAL ตำรวจ ======
+class PoliceModal(discord.ui.Modal, title="รายงานตัวตำรวจ"):
+    policeid = discord.ui.TextInput(label="รหัสประจำตัว")
+    name = discord.ui.TextInput(label="ชื่อ IC")
+    phone = discord.ui.TextInput(label="เบอร์ IC", required=False)
+    steam = discord.ui.TextInput(label="SteamHex", required=False)
+    invigilator = discord.ui.TextInput(label="ผู้คุมสอบ")
 
     async def on_submit(self, interaction: discord.Interaction):
-        guild = interaction.guild
         member = interaction.user
+        guild = interaction.guild
 
-        #  เปลี่ยนชื่อเล่น (Nickname)
-        new_nick = f"{self.policeid.value} [AMPD] {self.name.value}"
+        # เปลี่ยนชื่อ
         try:
-            await member.edit(nick=new_nick, reason="ตั้งชื่อ IC ตอนแนะนำตัว")
-        except discord.Forbidden:
-            await interaction.response.send_message("❌ บอทไม่มีสิทธิ์เปลี่ยนชื่อคุณ", ephemeral=True)
-            return
+            await member.edit(nick=f"{self.policeid.value} [AMPD] {self.name.value}")
+        except:
+            pass
 
-        #  เพิ่ม role
-        roles_to_add = [guild.get_role(rid) for rid in (ROLE_ID, ROLE_TRAINEE) if guild.get_role(rid)]
-        if roles_to_add:
-            await member.add_roles(*roles_to_add, reason="ผ่านการแนะนำตัว")
+        # เพิ่ม role
+        roles = [guild.get_role(POLICE_ROLE), guild.get_role(TRAINEE_ROLE)]
+        roles = [r for r in roles if r]
+        await member.add_roles(*roles)
 
-        #  ส่ง log
-        log_channel = guild.get_channel(LOG_CHANNEL_ID)
-        embed = discord.Embed(title="สมาชิกใหม่", color=0x00ff00)
-        embed.add_field(name="รหัสประจำตัว", value=self.policeid.value, inline=False)
-        embed.add_field(name="ชื่อIC", value=self.name.value, inline=False)
-        embed.add_field(name="เบอร์IC", value=self.phone.value or "-", inline=False)
-        embed.add_field(name="SteamHex", value=self.Steam.value or "-", inline=False)
+        # embed log
+        embed = discord.Embed(title="👮 รายงานตัวตำรวจ", color=0x00ff00)
+        embed.add_field(name="รหัส", value=self.policeid.value)
+        embed.add_field(name="ชื่อ", value=self.name.value)
         embed.add_field(name="ผู้คุมสอบ", value=self.invigilator.value, inline=False)
-        
 
-        if interaction.user.avatar:
-            embed.set_thumbnail(url=interaction.user.avatar.url)
+        if member.avatar:
+            embed.set_thumbnail(url=member.avatar.url)
 
-        embed.set_footer(text=f"User ID: {interaction.user.id}")
-        await log_channel.send(embed=embed)
+        embed.set_image(url="https://i.imgur.com/8Km9tLL.png")
 
-        await interaction.response.send_message("✅ เยี่ยม! ขอให้สนุกกับการทำงาน", ephemeral=True)
+        await interaction.guild.get_channel(LOG_CHANNEL_ID).send(embed=embed)
+
+        await interaction.response.send_message("✅ รับยศตำรวจเรียบร้อย", ephemeral=True)
 
 
-# ====== ปุ่ม ======
-class IntroButton(discord.ui.View):
+# ====== MODAL หมอ ======
+class DoctorModal(discord.ui.Modal, title="รายงานตัวแพทย์"):
+    name = discord.ui.TextInput(label="ชื่อ IC")
+    phone = discord.ui.TextInput(label="เบอร์ IC", required=False)
+    detail = discord.ui.TextInput(label="รายละเอียด", style=discord.TextStyle.paragraph)
+
+    async def on_submit(self, interaction: discord.Interaction):
+        member = interaction.user
+        guild = interaction.guild
+
+        # เปลี่ยนชื่อ (หมอ)
+        try:
+            await member.edit(nick=f"[AMMD] {self.name.value}")
+        except:
+            pass
+
+        # เพิ่ม role หมอ
+        role = guild.get_role(DOCTOR_ROLE)
+        if role:
+            await member.add_roles(role)
+
+        # embed log
+        embed = discord.Embed(title="🩺 รายงานตัวแพทย์", color=0x3498db)
+        embed.add_field(name="ชื่อ", value=self.name.value)
+        embed.add_field(name="รายละเอียด", value=self.detail.value, inline=False)
+
+        if member.avatar:
+            embed.set_thumbnail(url=member.avatar.url)
+
+        embed.set_image(url="https://i.imgur.com/8Km9tLL.png")
+
+        await interaction.guild.get_channel(LOG_CHANNEL_ID).send(embed=embed)
+
+        await interaction.response.send_message("✅ รับยศหมอเรียบร้อย", ephemeral=True)
+
+
+# ====== VIEW ปุ่ม ======
+class SelectRoleView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
 
-    @discord.ui.button(label="📋 กรอกข้อมูลและรับยศ", style=discord.ButtonStyle.primary, custom_id="intro_button")
-    async def intro_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.send_modal(IntroModal())
+    @discord.ui.button(label="👮‍♂️ ตำรวจ", style=discord.ButtonStyle.primary, custom_id="police_btn")
+    async def police(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_modal(PoliceModal())
+
+    @discord.ui.button(label="🩺 หมอ", style=discord.ButtonStyle.success, custom_id="doctor_btn")
+    async def doctor(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_modal(DoctorModal())
 
 
-# ====== Cog ======
+# ====== COG ======
 class IntroCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print(f"✅ IntroCog loaded")
-        self.bot.add_view(IntroButton())  # ✅ ปุ่มถาวร
+        print("✅ Role Select Loaded")
+
+        self.bot.add_view(SelectRoleView())
+
         channel = self.bot.get_channel(WELCOME_CHANNEL_ID)
 
-        # ป้องกันส่งซ้ำ
-        async for message in channel.history(limit=10):
-            if message.author == self.bot.user and message.components:
+        # กันส่งซ้ำ
+        async for msg in channel.history(limit=10):
+            if msg.author == self.bot.user and msg.components:
                 return
 
-        await channel.send(
-            "👋 ยินดีต้อนรับเจ้าหน้าที่ฝึกหัดคนใหม่! กดปุ่มด้านล่างเพื่อกรอกข้อมูล และรับยศ",
-            view=IntroButton()
+        embed = discord.Embed(
+            title="👋 ระบบรายงานตัว",
+            description="กรุณาเลือกสายงานของคุณ",
+            color=discord.Color.gold()
         )
+
+        embed.add_field(
+            name="👮‍♂️ ตำรวจ",
+            value="สำหรับเจ้าหน้าที่ตำรวจ",
+            inline=False
+        )
+
+        embed.add_field(
+            name="🩺 แพทย์",
+            value="สำหรับเจ้าหน้าที่ EMS / หมอ",
+            inline=False
+        )
+
+        embed.set_image(url="https://i.imgur.com/8Km9tLL.png")
+
+        await channel.send(embed=embed, view=SelectRoleView())
 
 
 # ====== setup ======
