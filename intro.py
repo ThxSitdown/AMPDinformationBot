@@ -127,7 +127,7 @@ class IntroCog(commands.Cog):
             color=discord.Color.gold()
         )
 
-        embed.set_image(url="https://cdn.discordapp.com/attachments/1384777604174970880/1490208100362358814/Agency1000x1000_black.png?ex=69d337f1&is=69d1e671&hm=974501222f9996684b0188dc5da35fe6f1490029ac6bde60399f7f1194d8aa27&")
+        embed.set_image(url="https://cdn.discordapp.com/attachments/1474376876217860241/1490229758045327411/Agency1000x1000.gif?ex=69d34c1d&is=69d1fa9d&hm=d224e7d7ec6d0c3a5255576a91b76c1510bd1cfcfacde92dfd21f302ac327a44&")
 
         await channel.send(embed=embed, view=SelectRoleView())
 
