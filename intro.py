@@ -120,23 +120,11 @@ class IntroCog(commands.Cog):
 
         embed = discord.Embed(
             title="👋 ระบบรายงานตัว",
-            description="กรุณาเลือกสายงานของคุณ",
+            description="ยินดีต้องรับนะจ๊ะ กรุณาเลือกหน่วยงานของคุณ",
             color=discord.Color.gold()
         )
 
-        embed.add_field(
-            name="👮‍♂️ ตำรวจ",
-            value="สำหรับเจ้าหน้าที่ตำรวจ",
-            inline=False
-        )
-
-        embed.add_field(
-            name="🩺 แพทย์",
-            value="สำหรับเจ้าหน้าที่ EMS / หมอ",
-            inline=False
-        )
-
-        embed.set_image(url="https://i.imgur.com/8Km9tLL.png")
+        embed.set_image(url="https://cdn.discordapp.com/attachments/1384777604174970880/1490208100362358814/Agency1000x1000_black.png?ex=69d337f1&is=69d1e671&hm=974501222f9996684b0188dc5da35fe6f1490029ac6bde60399f7f1194d8aa27&")
 
         await channel.send(embed=embed, view=SelectRoleView())
 
