@@ -49,7 +49,7 @@ class MyBot(commands.Bot):
 
     async def setup_hook(self):
         # โหลด extensions รวมถึง wipe
-        extensions = ["intro", "history", "absence", "case"]
+        extensions = ["intro", "history", "absence", "case", "training" ]
         for ext in extensions:
             try:
                 await self.load_extension(ext)

@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+
 # ====== CONFIG ======
 POLICE_ROLE = 1494623778439823422
 DOCTOR_ROLE = 1479831488332828703 
@@ -47,6 +48,16 @@ class PoliceModal(discord.ui.Modal, title="รายงานตัวตำร�
         await interaction.guild.get_channel(LOG_CHANNEL_ID).send(embed=embed)
 
         await interaction.response.send_message("✅ รับยศตำรวจเรียบร้อย", ephemeral=True)
+
+        training_cog = interaction.client.get_cog("TrainingCog")
+
+        if training_cog:
+            training_cog.send_to_training(
+                member,
+                self.name.value,
+                self.phone.value,
+                self.invigilator.value
+            )
 
 
 # ====== MODAL หมอ ======
